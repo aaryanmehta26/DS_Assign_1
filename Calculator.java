@@ -1,45 +1,52 @@
 import java.rmi.Remote;
 import java.rmi.RemoteException;
+import java.util.List;
 
 public interface Calculator extends Remote {
-    /**
-     * Adds an integer value to the top of the stack.
-     * 
-     * @param value The integer value to be added.
-     * @throws RemoteException if there is an error during the remote method call.
-     */
-    void pushValue(int val) throws RemoteException;
-
-    /**
-     * Performs the specified operation using the values in the stack.
-     * 
-     * @param operation The operation to be performed ("min", "max", "lcm", "gcd").
-     * @throws RemoteException if there is an error during the remote method call or invalid operation.
-     */
-    void pushOperation(String operator) throws RemoteException;
-
-    /**
-     * Checks whether the stack is currently empty.
-     * 
-     * @return True if the stack is empty, otherwise false.
-     * @throws RemoteException if there is an error during the remote method call.
-     */
-    int pop() throws RemoteException;
 
      /**
-     * Checks whether the stack is currently empty.
-     * 
-     * @return True if the stack is empty, otherwise false.
-     * @throws RemoteException if there is an error during the remote method call.
+     * Pushes an integer value onto the stack associated with the specified client.
+     * @param sessionId The identifier for the client whose stack is being accessed.
+     * @param val value to be pushed onto the stack.
      */
-    boolean isEmpty() throws RemoteException;
+    void pushValue(String sessionId, int val) throws RemoteException;
 
     /**
-     * Removes the top value from the stack after a specified delay.
-     * 
-     * @param delay The time in milliseconds to wait before removing the top value.
-     * @return The integer value that was at the top of the stack after the delay.
-     * @throws RemoteException if there is an error during the remote method call or delay operation.
+     * Performs the specified operation on the stack associated with the specified client.
+     * Allowed operations ->  "min", "max", "lcm", and "gcd".
+     * @param sessionId The identifier for the client whose stack is being accessed.
+     * @param operator The operation to perform. Can be "min", "max", "lcm", or "gcd".
      */
-    int delayPop(int delay) throws RemoteException;
+    void pushOperation(String sessionId, String operator) throws RemoteException;
+
+    /**
+     * Pops the top value from the stack associated with the specified client.
+     * @param sessionId The identifier for the client whose stack is being accessed.
+     * @return The integer value removed from the top of the stack.
+     */
+    int pop(String sessionId) throws RemoteException;
+
+    /**
+     * Checks if the stack associated with the specified client is empty.
+     *
+     * @param sessionId The identifier for the client whose stack is being accessed.
+     * @return True if the stack is empty, otherwise false.
+     */
+    boolean isEmpty(String sessionId) throws RemoteException;
+
+     /**
+     * Gives a copy of the stack associated with the specified client.
+     * 
+     * @param sessionId The identifier for the client whose stack is being accessed.
+     * @return A list of integers representing the current contents of the stack.
+     */
+    List<Integer> getStack(String sessionId) throws RemoteException;
+
+     /**
+     * Pops the top value from the stack associated with the specified client after a specified delay.
+     * @param sessionId The identifier for the client whose stack is being accessed.
+     * @param millis The delay in milliseconds before popping the value.
+     * @return The integer value removed from the top of the stack after the delay.
+     */
+    int delayPop(String sessionId, int millis) throws RemoteException;
 }
